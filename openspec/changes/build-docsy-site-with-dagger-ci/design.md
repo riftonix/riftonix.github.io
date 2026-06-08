@@ -81,6 +81,8 @@ GitHub Pages custom domain handling is repository/site-level. `riftonix.github.i
 
 Rollback is straightforward: disable the new deploy workflows, restore the previous Pages artifact/source, and remove preview paths from the published artifact if same-tree preview publishing was used.
 
+Before archiving this proposal, remove or rewrite machine-local absolute paths from OpenSpec artifacts. The implementation may use local paths during development for context, but archived specs should refer to repository-relative paths, committed assets, public repository links, or general implementation notes instead.
+
 ## Open Questions
 
 - None.

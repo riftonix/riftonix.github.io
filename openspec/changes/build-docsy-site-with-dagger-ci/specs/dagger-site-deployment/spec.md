@@ -14,6 +14,21 @@ The CI pipeline SHALL verify the Hugo site through the prepared Dagger static-si
 - **WHEN** the site is verified for a deployment target
 - **THEN** the verification command receives the base URL that matches that target
 
+### Requirement: Local workflow execution
+
+Local verification SHALL run through `act` against the GitHub Actions job that performs Dagger site verification.
+
+#### Scenario: Developer runs local site verification
+
+- **WHEN** a developer validates the site locally
+- **THEN** the documented command runs the `site-dagger` GitHub Actions job through `act`
+- **AND** the command passes the current repository checkout as the Dagger source directory
+
+#### Scenario: Local execution follows CI shape
+
+- **WHEN** the Dagger verification command changes in the GitHub Actions workflow
+- **THEN** local `act` execution uses the same workflow step instead of a separate Makefile or script implementation
+
 ### Requirement: Pull request preview rendering
 
 The pipeline SHALL render a feature preview for each pull request using a `riftonix.io` base URL that includes the pull request number.

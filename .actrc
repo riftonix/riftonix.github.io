@@ -1,0 +1,6 @@
+-P ubuntu-latest=-self-hosted
+-P ubuntu-24.04=-self-hosted
+-P ubuntu-22.04=-self-hosted
+-P self-hosted=-self-hosted
+--bind
+-e .github/act-event.json
