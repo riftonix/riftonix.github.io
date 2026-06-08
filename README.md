@@ -13,7 +13,7 @@ The workflow uses the current working directory as `SITE_DIR` during local
 `act` runs.
 
 Run the publish job locally to render with the canonical production base URL.
-Pages upload and deployment steps are skipped under `act`:
+The `gh-pages` deployment step is skipped under `act`:
 
 ```bash
 act -j publish --env SITE_OUTPUT_DIR="$PWD/public-production"

@@ -14,9 +14,9 @@ GitHub Pages custom domain handling is repository/site-level. `riftonix.github.i
 - Use `/home/user/Nextcloud/riftonix/featured-background.jpg` as the home page cover background.
 - Keep the navbar translucent over the home page cover by using Docsy-compatible configuration and only minimal overrides when necessary.
 - Use Dagger as the build/verification entrypoint for CI, preview rendering, and release rendering.
-- Provide pull request preview artifacts addressable by MR/PR number under `riftonix.io`.
+- Provide pull request preview artifacts addressable by PR number under `riftonix.io/pr-preview/`.
 - Publish merged changes to `riftonix.io`.
-- Add a merge-request `ci-passed` job that is intentionally always successful.
+- Add a merge-request `ci-passed` job that aggregates the required verification and deployment-preparation jobs.
 - Add Renovate automation for all tracked version declarations.
 
 **Non-Goals:**
@@ -40,32 +40,33 @@ GitHub Pages custom domain handling is repository/site-level. `riftonix.github.i
 
    Alternative considered: start from the newer `kb` dependency (`v0.15.0`). That may work, but it changes navbar defaults and increases visual drift from the requested behavior.
 
-3. Publish previews as path-scoped builds on the canonical custom domain.
+3. Publish previews as path-scoped builds on the canonical custom domain using `gh-pages` branch.
 
-   Production is rendered at `https://riftonix.io/`. MR previews are rendered at `https://riftonix.io/<mr-id>/`. The implementation should publish one Pages tree that contains production at `/` and previews under `/<mr-id>/`, preserving the custom domain for the site.
+   Production is rendered at `https://riftonix.io/`. PR previews are rendered at `https://riftonix.io/pr-preview/pr-<pr-id>/`. 
+   
+   To manage both production and multiple previews simultaneously, we will use the `gh-pages` branch as a unified storage. 
+   - For Pull Requests: Use `rossjrw/pr-preview-action` to deploy rendered output to `pr-preview/pr-<pr-id>/`. This action also handles automatic cleanup (deletion of the subdirectory) when the PR is closed.
+   - For Production (master): Use `JamesIves/github-pages-deploy-action` to deploy to the root of the `gh-pages` branch.
 
-   Complexity assessment:
+   Complexity assessment: Low (using well-supported community actions).
 
-   - Same published Pages tree, production plus `/<mr-id>/` on `riftonix.io`: low to medium complexity.
-   - Separate preview Pages repository/site or external preview hosting: not needed for the current requirement.
+4. Make `ci-passed` dependent on successful verification and preview jobs.
 
-   The default implementation should use the same-tree approach.
-
-4. Keep `ci-passed` intentionally green and make real checks separate.
-
-   The requested `ci-passed` job should always succeed on merge requests in this website repository only. Real quality gates should remain visible as separate jobs so failures are not hidden from reviewers. If branch protection requires only `ci-passed`, this intentionally allows merges while preserving diagnostic feedback.
-
-   Alternative considered: aggregate required jobs, as `/home/user/code/riftonix/daggerverse/.github/workflows/ci.yaml` currently does. That is safer as a required gate but contradicts the requested always-success behavior.
+   The `ci-passed` job should only succeed if the `verify` and `preview` (or `publish` for master) jobs have completed successfully. This ensures that only high-quality, verified code is considered "ready" according to the CI status.
 
 5. Use Renovate with explicit managers and custom regex where needed.
 
    Standard managers should cover GitHub Actions and Go modules. Regex managers should cover standalone versions such as `DAGGER_VERSION`, Docsy theme URL pins, Hugo image/version strings, and any Dagger module references that are not visible to standard managers.
 
+6. Switch GitHub Pages source to "Deploy from a branch".
+
+   To support the subdirectory preview strategy, the repository's GitHub Pages settings must be changed from "GitHub Actions" to "Deploy from a branch", selecting the `gh-pages` branch. This allows the site to serve the entire directory structure (root for production, subdirectories for previews).
+
 ## Risks / Trade-offs
 
 - Preview and production share one published Pages tree -> guard against preview publishes deleting production output by merging preview output into the existing deployed tree or using an equivalent preserve/restore step.
-- Always-green `ci-passed` can weaken branch protection -> keep real check jobs visible and name the behavior explicitly in workflow comments.
-- Hugo `baseURL` differs between preview and production path -> render preview with `https://riftonix.io/<mr-id>/` and production with `https://riftonix.io/`, and validate generated links for each mode.
+- Aggregated `ci-passed` can hide which upstream job failed in branch protection -> keep real check jobs visible separately and make `ci-passed` depend on `verify` plus the relevant `preview` or `publish` job.
+- Hugo `baseURL` differs between preview and production path -> render preview with `https://riftonix.io/pr-preview/pr-<pr-id>/` and production with `https://riftonix.io/`, and validate generated links for each mode.
 - Docsy navbar behavior can drift across versions -> pin Docsy initially and add a visual/style check for home page navbar classes or rendered CSS.
 - The background image lives outside the repository -> copy it into repository assets during implementation so CI can build without local Nextcloud state.
 - Renovate can create noisy updates across Actions, Go, Dagger, and Hugo -> group related updates and use schedule/labels.

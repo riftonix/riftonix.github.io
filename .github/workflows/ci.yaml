@@ -2,9 +2,11 @@ name: CI
 
 on:
   pull_request:
-    branches:
-      - master
-  push:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
     branches:
       - master
 
@@ -55,19 +57,20 @@ jobs:
 
   preview:
     name: Preview
-    if: ${{ github.event_name == 'pull_request' || github.event.act }}
+    if: ${{ always() && (github.event.act || (github.event_name == 'pull_request' && (github.event.action == 'closed' || needs.verify.result == 'success'))) }}
     runs-on: ubuntu-latest
     needs:
       - verify
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
     concurrency:
       group: preview-${{ github.event.pull_request.number || 0 }}
       cancel-in-progress: true
     env:
       PREVIEW_ID: ${{ github.event.pull_request.number || 0 }}
-      SITE_BASE_URL: https://riftonix.io/${{ github.event.pull_request.number || 0 }}/
-      SITE_OUTPUT_DIR: preview/${{ github.event.pull_request.number || 0 }}
+      SITE_BASE_URL: https://riftonix.io/pr-preview/pr-${{ github.event.pull_request.number || 0 }}/
+      SITE_OUTPUT_DIR: public-preview
 
     steps:
       - name: Check out repository
@@ -75,22 +78,23 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.action == 'closed' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
 
       - name: Set up Dagger
-        if: ${{ !env.ACT }}
+        if: ${{ !env.ACT && github.event.action != 'closed' }}
         uses: dagger/dagger-for-github@v8.4.1
         with:
           version: ${{ env.DAGGER_VERSION }}
 
       - name: Use current directory for local act source
-        if: ${{ env.ACT }}
+        if: ${{ env.ACT && github.event.action != 'closed' }}
         run: |
           ACT_CWD=$(readlink /proc/$(pgrep -u $(id -u) -x act | head -n 1)/cwd)
           echo "Detected local source: $ACT_CWD"
           printf 'SITE_DIR=%s\n' "$ACT_CWD" >> "$GITHUB_ENV"
 
       - name: Render preview with Dagger static-site scenario
+        if: ${{ github.event.action != 'closed' }}
         run: |
           dagger --progress=plain -m "$STATIC_SITE_MODULE" call render-site \
             --site="$SITE_DIR" \
@@ -98,81 +102,48 @@ jobs:
             --engine=hugo \
             --output="$SITE_OUTPUT_DIR"
 
-      - name: Upload preview artifact
-        if: ${{ !env.ACT }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: preview-${{ env.PREVIEW_ID }}
-          path: ${{ env.SITE_OUTPUT_DIR }}
-          if-no-files-found: error
-          overwrite: true
-
-  publish:
-    name: Publish
-    if: ${{ github.event_name == 'push' || github.event.act }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    concurrency:
-      group: pages-production
-      cancel-in-progress: false
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Check out repository
-        if: ${{ !env.ACT }}
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          ref: ${{ github.sha }}
-
-      - name: Set up Dagger
-        if: ${{ !env.ACT }}
-        uses: dagger/dagger-for-github@v8.4.1
-        with:
-          version: ${{ env.DAGGER_VERSION }}
-
-      - name: Use current directory for local act source
-        if: ${{ env.ACT }}
+      - name: Add GitHub Pages preview markers
+        if: ${{ github.event.action != 'closed' }}
         run: |
-          ACT_CWD=$(readlink /proc/$(pgrep -u $(id -u) -x act | head -n 1)/cwd)
-          echo "Detected local source: $ACT_CWD"
-          printf 'SITE_DIR=%s\n' "$ACT_CWD" >> "$GITHUB_ENV"
+          touch "$SITE_OUTPUT_DIR/.nojekyll"
+          mkdir -p "$RUNNER_TEMP/pages-root-markers"
+          touch "$RUNNER_TEMP/pages-root-markers/.nojekyll"
+          printf 'riftonix.io\n' > "$RUNNER_TEMP/pages-root-markers/CNAME"
 
-      - name: Render production with Dagger static-site scenario
-        run: |
-          dagger --progress=plain -m "$STATIC_SITE_MODULE" call render-site \
-            --site="$SITE_DIR" \
-            --site-base-url="$SITE_BASE_URL" \
-            --engine=hugo \
-            --output="$SITE_OUTPUT_DIR"
-          printf 'riftonix.io\n' > "$SITE_OUTPUT_DIR/CNAME"
-
-      - name: Configure Pages
-        if: ${{ !env.ACT }}
-        uses: actions/configure-pages@v5
-
-      - name: Upload production Pages artifact
-        if: ${{ !env.ACT }}
-        uses: actions/upload-pages-artifact@v4
+      - name: Deploy GitHub Pages root markers
+        if: ${{ !env.ACT && github.event.action != 'closed' }}
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: ${{ env.SITE_OUTPUT_DIR }}
+          branch: gh-pages
+          folder: ${{ runner.temp }}/pages-root-markers
+          clean: false
+          force: false
 
-      - name: Deploy production to Pages
+      - name: Deploy pull request preview
         if: ${{ !env.ACT }}
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: rossjrw/pr-preview-action@v1.8.1
+        with:
+          source-dir: ${{ env.SITE_OUTPUT_DIR }}
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          pr-number: ${{ env.PREVIEW_ID }}
+          pages-base-url: riftonix.io
+          action: auto
+          qr-code: false
 
   ci-passed:
     name: CI Passed
     runs-on: ubuntu-latest
+    needs:
+      - verify
+      - preview
+    if: ${{ always() }}
 
     steps:
-      - name: Mark CI as passed
+      - name: Check CI jobs
+        env:
+          VERIFY_RESULT: ${{ needs.verify.result }}
+          PREVIEW_RESULT: ${{ needs.preview.result }}
         run: |
-          # This status is intentionally always green for pull requests.
-          true
+          test "$VERIFY_RESULT" = success
+          test "$PREVIEW_RESULT" = success || test "$PREVIEW_RESULT" = skipped
