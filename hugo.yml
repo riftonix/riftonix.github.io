@@ -1,0 +1,44 @@
+baseURL: "https://riftonix.io/"
+title: "RiftOniX"
+enableRobotsTXT: true
+
+contentDir: content/en
+defaultContentLanguage: en
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    style: tango
+
+params:
+  copyright:
+    authors: RiftOniX
+    from_year: 2026
+  ui:
+    navbar_logo: false
+    navbar_theme: dark
+    navbar_translucent_over_cover_disable: false
+  links:
+    # End user relevant links. These will show up on left side of footer and in the community page if you have one.
+    user: []
+    # Developer relevant links. These will show up on right side of footer and in the community page if you have one.
+    developer:
+      - name: GitHub
+        url: https://github.com/riftonix
+        icon: fab fa-github
+        desc: Development takes place here!
+      - name: Telegram
+        url: https://t.me/riftonix
+        icon: fab fa-telegram
+        desc: Join the RiftOniX community.
+
+module:
+  proxy: direct
+  hugoVersion:
+    extended: true
+    min: 0.127.0
+  imports:
+    - path: github.com/google/docsy
+      disable: false
