@@ -1,8 +1,8 @@
 ## 1. Deployment Strategy
 
-- [x] 1.1 Decision only: use `https://riftonix.io/` as the canonical production URL and `https://riftonix.io/<mr-id>/` as the canonical preview URL.
+- [x] 1.1 Decision only: use `https://riftonix.io/` as the canonical production URL and `https://riftonix.io/pr-preview/pr-<pr-id>/` as the canonical preview URL.
 - [x] 1.2 Decision only: use `master` as the production branch name for deploy triggers.
-- [x] 1.3 Add the always-successful `ci-passed` pull request job in this repository before implementing the rest of the pipeline.
+- [x] 1.3 Update the `ci-passed` job to require success of previous verification and preview jobs instead of being always green.
 
 ## 2. Hugo Docsy Site
 
@@ -19,17 +19,18 @@
 
 - [x] 3.1 Add a local `act` invocation path for the Dagger static-site verification job so local checks use the same GitHub Actions job shape as CI.
 - [x] 3.2 Add a production verification/render command with base URL `https://riftonix.io/`.
-- [x] 3.3 Add a pull request preview verification/render command with base URL `https://riftonix.io/<mr-id>/`.
+- [x] 3.3 Add a pull request preview verification/render command with base URL `https://riftonix.io/pr-preview/pr-<pr-id>/`.
 - [x] 3.4 Ensure CI can run the Dagger commands without depending on local-only files outside the repository.
 
 ## 4. GitHub Actions Pipeline
 
 - [x] 4.1 Add pull request workflow jobs for checkout, Dagger setup, site verification, and preview rendering.
-- [x] 4.2 Add preview publishing for the selected strategy, including path cleanup or overwrite behavior for repeated pull request updates.
-- [x] 4.3 Add production workflow trigger for merged changes on `master`.
-- [x] 4.4 Add production Pages publishing with the correct `riftonix.io` custom-domain handling for the selected Pages publishing mode.
-- [x] 4.5 Add workflow permissions and concurrency groups for preview and production deployments.
-- [x] 4.6 Keep diagnostic jobs visible separately from the always-successful `ci-passed` job.
+- [x] 4.2 Configure `rossjrw/pr-preview-action` in `ci.yaml` to deploy previews to the `gh-pages` branch and handle auto-cleanup.
+- [x] 4.3 Extract the production `publish` job into `.github/workflows/publish.yaml` and use `JamesIves/github-pages-deploy-action` to deploy to the root of `gh-pages`.
+- [x] 4.4 Add production Pages publishing with the correct `riftonix.io` custom-domain handling.
+- [x] 4.5 Add workflow permissions (`contents: write`, `pull-requests: write`) and concurrency groups.
+- [x] 4.6 Update `ci-passed` to require success of `verify` and `preview`/`publish`.
+- [x] 4.7 Update repository settings (manually or via `gh` if possible) to set Pages source to the `gh-pages` branch.
 
 ## 5. Renovate
 

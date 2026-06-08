@@ -15,7 +15,7 @@ https://riftonix.io/
 Pull request previews are rendered with:
 
 ```text
-https://riftonix.io/<mr-id>/
+https://riftonix.io/pr-preview/pr-<pr-id>/
 ```
 
 Preview publishing must preserve the production root site while replacing only the matching preview path.

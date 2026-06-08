@@ -31,17 +31,17 @@ Local verification SHALL run through `act` against the GitHub Actions job that p
 
 ### Requirement: Pull request preview rendering
 
-The pipeline SHALL render a feature preview for each pull request using a `riftonix.io` base URL that includes the pull request number.
+The pipeline SHALL render a feature preview for each pull request using a `riftonix.io` base URL under `pr-preview/pr-<pr-id>/`.
 
 #### Scenario: Preview base URL is calculated
 
 - **WHEN** pull request number `123` is rendered for preview
-- **THEN** the site is built with base URL `https://riftonix.io/123/`
+- **THEN** the site is built with base URL `https://riftonix.io/pr-preview/pr-123/`
 
 #### Scenario: Preview artifact is published
 
 - **WHEN** the pull request preview workflow completes successfully
-- **THEN** the rendered site artifact is published to a preview path corresponding to the pull request number
+- **THEN** the rendered site artifact is published to `pr-preview/pr-<pr-id>/` on the Pages branch
 
 ### Requirement: Production rendering
 
@@ -64,26 +64,31 @@ The implementation SHALL publish production and preview builds under the same `r
 #### Scenario: Same Pages site is used
 
 - **WHEN** the implementation uses one GitHub Pages site for both production and previews
-- **THEN** production is available at `https://riftonix.io/` and previews are available under `https://riftonix.io/<mr-id>/`
+- **THEN** production is available at `https://riftonix.io/` and previews are available under `https://riftonix.io/pr-preview/pr-<pr-id>/`
 
 #### Scenario: Preview update preserves production
 
 - **WHEN** a pull request preview is updated
 - **THEN** the deployment does not remove the production root site from the published artifact
 
-### Requirement: Always-success ci-passed job
+### Requirement: Aggregated ci-passed job
 
-The pull request workflow in this repository SHALL include a `ci-passed` job that always finishes successfully.
+The workflow SHALL include a `ci-passed` job that aggregates the required verification and deployment jobs for branch protection.
 
 #### Scenario: Upstream checks fail
 
-- **WHEN** one or more diagnostic CI jobs fail in a pull request
-- **THEN** the `ci-passed` job still reports success
+- **WHEN** one or more required upstream CI jobs fail
+- **THEN** the `ci-passed` job fails
 
-#### Scenario: Diagnostic jobs remain visible
+#### Scenario: Required jobs pass
+
+- **WHEN** `verify` succeeds and the relevant `preview` or `publish` job succeeds
+- **THEN** the `ci-passed` job succeeds
+
+#### Scenario: Upstream jobs remain visible
 
 - **WHEN** the workflow run is inspected
-- **THEN** real verification, build, and deploy-preparation jobs remain visible separately from `ci-passed`
+- **THEN** real verification, build, and deploy jobs remain visible separately from `ci-passed`
 
 ### Requirement: Deployment permissions and concurrency
 

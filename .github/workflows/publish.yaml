@@ -1,0 +1,68 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+env:
+  DAGGER_VERSION: 0.20.8
+  STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.1.0
+  SITE_DIR: .
+  SITE_BASE_URL: https://riftonix.io/
+  SITE_OUTPUT_DIR: public
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages-production
+      cancel-in-progress: false
+
+    steps:
+      - name: Check out repository
+        if: ${{ !env.ACT }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Set up Dagger
+        if: ${{ !env.ACT }}
+        uses: dagger/dagger-for-github@v8.4.1
+        with:
+          version: ${{ env.DAGGER_VERSION }}
+
+      - name: Use current directory for local act source
+        if: ${{ env.ACT }}
+        run: |
+          ACT_CWD=$(readlink /proc/$(pgrep -u $(id -u) -x act | head -n 1)/cwd)
+          echo "Detected local source: $ACT_CWD"
+          printf 'SITE_DIR=%s\n' "$ACT_CWD" >> "$GITHUB_ENV"
+
+      - name: Render production with Dagger static-site scenario
+        run: |
+          dagger --progress=plain -m "$STATIC_SITE_MODULE" call render-site \
+            --site="$SITE_DIR" \
+            --site-base-url="$SITE_BASE_URL" \
+            --engine=hugo \
+            --output="$SITE_OUTPUT_DIR"
+
+      - name: Add GitHub Pages production markers
+        run: |
+          touch "$SITE_OUTPUT_DIR/.nojekyll"
+          printf 'riftonix.io\n' > "$SITE_OUTPUT_DIR/CNAME"
+
+      - name: Deploy production to gh-pages
+        if: ${{ !env.ACT }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: ${{ env.SITE_OUTPUT_DIR }}
+          clean: true
+          clean-exclude: pr-preview
+          force: false
