@@ -86,12 +86,13 @@ jobs:
         with:
           version: ${{ env.DAGGER_VERSION }}
 
-      - name: Use current directory for local act source
+      - name: Use current directory for local act source and output
         if: ${{ env.ACT && github.event.action != 'closed' }}
         run: |
           ACT_CWD=$(readlink /proc/$(pgrep -u $(id -u) -x act | head -n 1)/cwd)
           echo "Detected local source: $ACT_CWD"
           printf 'SITE_DIR=%s\n' "$ACT_CWD" >> "$GITHUB_ENV"
+          printf 'SITE_OUTPUT_DIR=%s/public-preview-%s\n' "$ACT_CWD" "$PREVIEW_ID" >> "$GITHUB_ENV"
 
       - name: Render preview with Dagger static-site scenario
         if: ${{ github.event.action != 'closed' }}
@@ -105,7 +106,6 @@ jobs:
       - name: Add GitHub Pages preview markers
         if: ${{ github.event.action != 'closed' }}
         run: |
-          touch "$SITE_OUTPUT_DIR/.nojekyll"
           mkdir -p "$RUNNER_TEMP/pages-root-markers"
           touch "$RUNNER_TEMP/pages-root-markers/.nojekyll"
           printf 'riftonix.io\n' > "$RUNNER_TEMP/pages-root-markers/CNAME"

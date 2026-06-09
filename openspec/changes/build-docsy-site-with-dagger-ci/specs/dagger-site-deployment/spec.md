@@ -16,18 +16,30 @@ The CI pipeline SHALL verify the Hugo site through the prepared Dagger static-si
 
 ### Requirement: Local workflow execution
 
-Local verification SHALL run through `act` against the GitHub Actions job that performs Dagger site verification.
+Local verification and rendering SHALL run through `act` against the GitHub Actions jobs that perform Dagger site verification and rendering.
 
 #### Scenario: Developer runs local site verification
 
 - **WHEN** a developer validates the site locally
-- **THEN** the documented command runs the `site-dagger` GitHub Actions job through `act`
+- **THEN** the documented command runs the `verify` GitHub Actions job through `act`
 - **AND** the command passes the current repository checkout as the Dagger source directory
 
 #### Scenario: Local execution follows CI shape
 
 - **WHEN** the Dagger verification command changes in the GitHub Actions workflow
 - **THEN** local `act` execution uses the same workflow step instead of a separate Makefile or script implementation
+
+#### Scenario: Developer runs local production render
+
+- **WHEN** a developer runs the production publish job locally with `act -j publish`
+- **THEN** the workflow renders the production site to `<current-checkout>/public-production`
+- **AND** the documented command does not require `--env SITE_OUTPUT_DIR=...`
+
+#### Scenario: Developer runs local preview render
+
+- **WHEN** a developer runs the preview job locally with `act -j preview`
+- **THEN** the workflow renders the preview site to `<current-checkout>/public-preview-<preview-id>`
+- **AND** the documented command does not require `--env SITE_OUTPUT_DIR=...`
 
 ### Requirement: Pull request preview rendering
 

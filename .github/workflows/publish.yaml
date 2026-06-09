@@ -37,12 +37,13 @@ jobs:
         with:
           version: ${{ env.DAGGER_VERSION }}
 
-      - name: Use current directory for local act source
+      - name: Use current directory for local act source and output
         if: ${{ env.ACT }}
         run: |
           ACT_CWD=$(readlink /proc/$(pgrep -u $(id -u) -x act | head -n 1)/cwd)
           echo "Detected local source: $ACT_CWD"
           printf 'SITE_DIR=%s\n' "$ACT_CWD" >> "$GITHUB_ENV"
+          printf 'SITE_OUTPUT_DIR=%s/public-production\n' "$ACT_CWD" >> "$GITHUB_ENV"
 
       - name: Render production with Dagger static-site scenario
         run: |

@@ -21,6 +21,7 @@
 - [x] 3.2 Add a production verification/render command with base URL `https://riftonix.io/`.
 - [x] 3.3 Add a pull request preview verification/render command with base URL `https://riftonix.io/pr-preview/pr-<pr-id>/`.
 - [x] 3.4 Ensure CI can run the Dagger commands without depending on local-only files outside the repository.
+- [x] 3.5 Update local `act` workflow handling so publish and preview jobs derive `SITE_OUTPUT_DIR` from the detected checkout directory, allowing README commands to omit `--env SITE_OUTPUT_DIR=...`.
 
 ## 4. GitHub Actions Pipeline
 
