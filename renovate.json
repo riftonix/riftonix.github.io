@@ -1,0 +1,124 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "dependencyDashboard": true,
+  "enabledManagers": [
+    "github-actions",
+    "gomod",
+    "custom.regex"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update Dagger CLI version in GitHub Actions",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "DAGGER_VERSION:\\s*(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+      ],
+      "depNameTemplate": "manjaro_stable/dagger",
+      "datasourceTemplate": "repology",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Update released daggerverse refs in repository automation",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "github\\.com/riftonix/daggerverse/(?<tagPrefix>(?:modules|scenarios)/[a-z0-9-]+)@(?:modules|scenarios)/[a-z0-9-]+/v(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+      ],
+      "depNameTemplate": "riftonix/daggerverse",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^{{{tagPrefix}}}/v(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Update Hugo module minimum version pins",
+      "managerFilePatterns": [
+        "/^hugo\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "min:\\s*(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+      ],
+      "depNameTemplate": "gohugoio/hugo",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Update Docsy theme URL pins outside Go modules",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/",
+        "/^hugo\\.ya?ml$/",
+        "/^README\\.md$/",
+        "/^openspec/.*\\.md$/"
+      ],
+      "matchStrings": [
+        "github\\.com/google/docsy@v(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+      ],
+      "depNameTemplate": "google/docsy",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github actions",
+      "labels": [
+        "dependencies",
+        "github-actions"
+      ]
+    },
+    {
+      "matchDepNames": [
+        "dagger/dagger-for-github",
+        "manjaro_stable/dagger",
+        "riftonix/daggerverse"
+      ],
+      "groupName": "dagger toolchain",
+      "labels": [
+        "dependencies",
+        "dagger"
+      ]
+    },
+    {
+      "matchDepNames": [
+        "github.com/google/docsy",
+        "gohugoio/hugo",
+        "google/docsy"
+      ],
+      "groupName": "hugo docsy site",
+      "labels": [
+        "dependencies",
+        "hugo"
+      ]
+    },
+    {
+      "matchManagers": [
+        "gomod"
+      ],
+      "groupName": "go modules",
+      "labels": [
+        "dependencies",
+        "go"
+      ]
+    }
+  ],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "rangeStrategy": "bump"
+}
