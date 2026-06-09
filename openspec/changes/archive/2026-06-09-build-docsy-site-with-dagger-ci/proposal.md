@@ -4,13 +4,13 @@ The repository currently only serves a placeholder GitHub Pages site, while the 
 
 ## What Changes
 
-- Add a Hugo Docsy site to this repository, modeled after `/home/user/code/riftonix/kb` and using the prepared Dagger static-site scenario from `/home/user/code/riftonix/daggerverse/scenarios/static-site`.
+- Add a Hugo Docsy site to this repository using Docsy conventions and the prepared Dagger static-site scenario from `github.com/riftonix/daggerverse/scenarios/static-site`.
 - Add a GitHub Actions pipeline that verifies the site on pull requests and deploys rendered artifacts.
 - Add pull request preview publishing at `https://riftonix.io/pr-preview/pr-<pr-id>/`.
 - Add production publishing for merged changes at `https://riftonix.io/`.
 - Add a `ci-passed` job that aggregates mandatory verification and preview checks for merge requests, matching the requested behavior for branch protection/status checks.
 - Make local `act` publish and preview runs infer checkout-relative output directories so documented commands do not require manual `SITE_OUTPUT_DIR` overrides.
-- Use `/home/user/Nextcloud/riftonix/featured-background.jpg` as the home page cover background.
+- Use `content/en/featured-background.jpg` as the home page cover background.
 - Keep the Docsy top navbar transparent while it overlays the home page cover, preserving the behavior available in Docsy `v0.13.0`.
 - Add Renovate coverage for all versioned dependencies and workflow/tooling versions used by the repository.
 

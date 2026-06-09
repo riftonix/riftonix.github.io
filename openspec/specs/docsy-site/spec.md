@@ -1,5 +1,8 @@
-## ADDED Requirements
+# docsy-site Specification
 
+## Purpose
+TBD - created by archiving change build-docsy-site-with-dagger-ci. Update Purpose after archive.
+## Requirements
 ### Requirement: Hugo Docsy site skeleton
 
 The repository SHALL contain a Hugo Docsy site that can be built from repository files without relying on generated `public/` output committed to source control.
@@ -40,7 +43,7 @@ The home page SHALL use the provided `featured-background.jpg` image as the firs
 #### Scenario: CI build is self-contained
 
 - **WHEN** CI builds the site
-- **THEN** the build succeeds without reading `/home/user/Nextcloud/riftonix/featured-background.jpg`
+- **THEN** the build succeeds using only repository files, including `content/en/featured-background.jpg`
 
 ### Requirement: Transparent navbar over cover
 
@@ -69,3 +72,4 @@ The site SHALL include baseline navigation and content entry points suitable for
 
 - **WHEN** Hugo renders the site
 - **THEN** generated internal links resolve under the active base URL
+

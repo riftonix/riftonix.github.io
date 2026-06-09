@@ -1,8 +1,8 @@
 ## Context
 
-This repository is currently a minimal GitHub Pages repository with `README.md`, `CNAME` set to `riftonix.io`, and OpenSpec scaffolding. The target site should use Hugo Docsy, following the implementation style in `/home/user/code/riftonix/kb`, while build and validation should use the prepared Dagger scenario in `/home/user/code/riftonix/daggerverse/scenarios/static-site`.
+This repository is currently a minimal GitHub Pages repository with `README.md`, `CNAME` set to `riftonix.io`, and OpenSpec scaffolding. The target site should use Hugo Docsy, while build and validation should use the prepared Dagger scenario in `github.com/riftonix/daggerverse/scenarios/static-site`.
 
-The static-site scenario already supports `verify_site` and `render_site` for Hugo and currently defaults to `github.com/google/docsy@v0.13.0`. The example `kb` site uses Hugo modules, Docsy config, Russian/English language config, Docsy navbar settings, and project SCSS overrides.
+The static-site scenario already supports `verify_site` and `render_site` for Hugo and currently defaults to `github.com/google/docsy@v0.13.0`. The site should use Hugo modules, Docsy config, Docsy navbar settings, and project SCSS overrides.
 
 GitHub Pages custom domain handling is repository/site-level. `riftonix.github.io` is the GitHub-provided Pages domain and `riftonix.io` is the custom domain for the same site. To avoid ambiguity, this change treats `riftonix.io` as the canonical host for both production and preview URLs.
 
@@ -11,7 +11,7 @@ GitHub Pages custom domain handling is repository/site-level. `riftonix.github.i
 **Goals:**
 
 - Build a Hugo Docsy site in this repository with a functional home page, navigation, base content, and project styling.
-- Use `/home/user/Nextcloud/riftonix/featured-background.jpg` as the home page cover background.
+- Use `content/en/featured-background.jpg` as the home page cover background.
 - Keep the navbar translucent over the home page cover by using Docsy-compatible configuration and only minimal overrides when necessary.
 - Use Dagger as the build/verification entrypoint for CI, preview rendering, and release rendering.
 - Provide pull request preview artifacts addressable by PR number under `riftonix.io/pr-preview/`.
@@ -30,7 +30,7 @@ GitHub Pages custom domain handling is repository/site-level. `riftonix.github.i
 
 1. Use Hugo modules for Docsy instead of vendoring the theme.
 
-   This matches the `kb` example, keeps Docsy versioning visible in `go.mod`, and gives Renovate a normal dependency file to maintain. The site config will import `github.com/google/docsy`; the Dagger scenario can still pin the build-time theme URL for reproducible scenario validation.
+   This keeps Docsy versioning visible in `go.mod` and gives Renovate a normal dependency file to maintain. The site config will import `github.com/google/docsy`; the Dagger scenario can still pin the build-time theme URL for reproducible scenario validation.
 
    Alternative considered: vendoring Docsy into `themes/`. That would make local builds less dependent on module resolution but increases repository size and makes upgrades noisier.
 
@@ -38,7 +38,7 @@ GitHub Pages custom domain handling is repository/site-level. `riftonix.github.i
 
    The request specifically calls out transparent navbar behavior like Docsy `v0.13.0`, and the prepared static-site scenario also defaults to `github.com/google/docsy@v0.13.0`. The implementation should start with Docsy `v0.13.0` unless there is a compatibility issue that forces a newer version.
 
-   Alternative considered: start from the newer `kb` dependency (`v0.15.0`). That may work, but it changes navbar defaults and increases visual drift from the requested behavior.
+   Alternative considered: start from a newer Docsy dependency. That may work, but it changes navbar defaults and increases visual drift from the requested behavior.
 
 3. Publish previews as path-scoped builds on the canonical custom domain using `gh-pages` branch.
 
@@ -68,7 +68,7 @@ GitHub Pages custom domain handling is repository/site-level. `riftonix.github.i
 - Aggregated `ci-passed` can hide which upstream job failed in branch protection -> keep real check jobs visible separately and make `ci-passed` depend on `verify` plus the relevant `preview` or `publish` job.
 - Hugo `baseURL` differs between preview and production path -> render preview with `https://riftonix.io/pr-preview/pr-<pr-id>/` and production with `https://riftonix.io/`, and validate generated links for each mode.
 - Docsy navbar behavior can drift across versions -> pin Docsy initially and add a visual/style check for home page navbar classes or rendered CSS.
-- The background image lives outside the repository -> copy it into repository assets during implementation so CI can build without local Nextcloud state.
+- The background image must be present in the repository -> use `content/en/featured-background.jpg` so CI can build without local machine state.
 - Renovate can create noisy updates across Actions, Go, Dagger, and Hugo -> group related updates and use schedule/labels.
 
 ## Migration Plan
