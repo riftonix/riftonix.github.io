@@ -15,7 +15,8 @@ permissions:
 
 env:
   DAGGER_VERSION: 0.20.8
-  STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.1.0
+  STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.2.0
+  HUGO_THEME_URL: github.com/google/docsy@v0.13.0
   SITE_DIR: .
   SITE_BASE_URL: https://riftonix.io/
   SITE_OUTPUT_DIR: public
@@ -50,8 +51,10 @@ jobs:
 
       - name: Verify site with Dagger static-site scenario
         run: |
-          dagger --progress=plain -m "$STATIC_SITE_MODULE" call verify-site \
-            --site="$SITE_DIR" \
+          dagger --progress=plain -m "$STATIC_SITE_MODULE" call \
+            --source="$SITE_DIR" \
+            --hugo-theme-url="$HUGO_THEME_URL" \
+            verify-site \
             --site-base-url="$SITE_BASE_URL" \
             --engine=hugo
 
@@ -97,8 +100,10 @@ jobs:
       - name: Render preview with Dagger static-site scenario
         if: ${{ github.event.action != 'closed' }}
         run: |
-          dagger --progress=plain -m "$STATIC_SITE_MODULE" call render-site \
-            --site="$SITE_DIR" \
+          dagger --progress=plain -m "$STATIC_SITE_MODULE" call \
+            --source="$SITE_DIR" \
+            --hugo-theme-url="$HUGO_THEME_URL" \
+            render-site \
             --site-base-url="$SITE_BASE_URL" \
             --engine=hugo \
             --output="$SITE_OUTPUT_DIR"
