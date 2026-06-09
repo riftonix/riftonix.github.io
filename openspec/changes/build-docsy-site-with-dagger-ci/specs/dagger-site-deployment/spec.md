@@ -32,7 +32,7 @@ Local verification and rendering SHALL run through `act` against the GitHub Acti
 #### Scenario: Developer runs local production render
 
 - **WHEN** a developer runs the production publish job locally with `act -j publish`
-- **THEN** the workflow renders the production site to `<current-checkout>/public-production`
+- **THEN** the workflow renders the production site to `<current-checkout>/public-local`
 - **AND** the documented command does not require `--env SITE_OUTPUT_DIR=...`
 
 #### Scenario: Developer runs local preview render
