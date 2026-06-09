@@ -9,19 +9,18 @@ Run the Dagger site verification job with `act` against the current working tree
 act -j verify
 ```
 
-The workflow uses the current working directory as `SITE_DIR` during local
-`act` runs.
-
-Run the publish job locally to render with the canonical production base URL.
-The `gh-pages` deployment step is skipped under `act`:
+Run a pull request preview render. Local runs use preview id `0` unless an event
+payload supplies a pull request number. Preview output is written to
+`public-preview-<id>/`:
 
 ```bash
-act -j publish --env SITE_OUTPUT_DIR="$PWD/public-production"
+act -j preview
 ```
 
-Run a pull request preview render. Local runs use preview id `0` unless an event
-payload supplies a pull request number:
+Run the publish job locally to render with the canonical production base URL.
+The `gh-pages` deployment step is skipped under `act`. Local publish output is
+written to `public-local/`:
 
 ```bash
-act -j preview --env SITE_OUTPUT_DIR="$PWD/public-preview-0"
+act -j publish
 ```

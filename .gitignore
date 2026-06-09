@@ -35,5 +35,5 @@ go.work.sum
 .hugo_build.lock
 /public/
 /public-preview*/
-/public-production/
+/public-local/
 /resources/
