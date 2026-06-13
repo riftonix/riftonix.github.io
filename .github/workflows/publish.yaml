@@ -11,7 +11,7 @@ permissions:
 env:
   DAGGER_VERSION: 0.20.8
   STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.2.0
-  HUGO_THEME_URL: github.com/google/docsy@v0.13.0
+  HUGO_THEME_URL: github.com/google/docsy@v0.15.0
   SITE_DIR: .
   SITE_BASE_URL: https://riftonix.io/
   SITE_OUTPUT_DIR: public
