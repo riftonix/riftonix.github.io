@@ -2,7 +2,7 @@
 
 This repository is currently a minimal GitHub Pages repository with `README.md`, `CNAME` set to `riftonix.io`, and OpenSpec scaffolding. The target site should use Hugo Docsy, while build and validation should use the prepared Dagger scenario in `github.com/riftonix/daggerverse/scenarios/static-site`.
 
-The static-site scenario already supports `verify_site` and `render_site` for Hugo and currently defaults to `github.com/google/docsy@v0.13.0`. The site should use Hugo modules, Docsy config, Docsy navbar settings, and project SCSS overrides.
+The static-site scenario already supports `verify_site` and `render_site` for Hugo and currently defaults to `github.com/google/docsy@v0.15.0`. The site should use Hugo modules, Docsy config, Docsy navbar settings, and project SCSS overrides.
 
 GitHub Pages custom domain handling is repository/site-level. `riftonix.github.io` is the GitHub-provided Pages domain and `riftonix.io` is the custom domain for the same site. To avoid ambiguity, this change treats `riftonix.io` as the canonical host for both production and preview URLs.
 
@@ -36,7 +36,7 @@ GitHub Pages custom domain handling is repository/site-level. `riftonix.github.i
 
 2. Keep Docsy `v0.13.0` behavior as the initial visual target.
 
-   The request specifically calls out transparent navbar behavior like Docsy `v0.13.0`, and the prepared static-site scenario also defaults to `github.com/google/docsy@v0.13.0`. The implementation should start with Docsy `v0.13.0` unless there is a compatibility issue that forces a newer version.
+   The request specifically calls out transparent navbar behavior like Docsy `v0.13.0`, and the prepared static-site scenario also defaults to `github.com/google/docsy@v0.15.0`. The implementation should start with Docsy `v0.13.0` unless there is a compatibility issue that forces a newer version.
 
    Alternative considered: start from a newer Docsy dependency. That may work, but it changes navbar defaults and increases visual drift from the requested behavior.
 

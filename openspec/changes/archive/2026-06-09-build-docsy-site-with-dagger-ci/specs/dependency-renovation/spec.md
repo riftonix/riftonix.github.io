@@ -52,5 +52,5 @@ Renovate SHALL track Hugo and Docsy build pins wherever they are represented out
 
 #### Scenario: Docsy URL pin is used
 
-- **WHEN** a Docsy theme URL pin such as `github.com/google/docsy@v0.13.0` appears in tracked files
+- **WHEN** a Docsy theme URL pin such as `github.com/google/docsy@v0.15.0` appears in tracked files
 - **THEN** Renovate proposes updates for that pin
