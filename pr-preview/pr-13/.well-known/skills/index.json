@@ -1,0 +1,58 @@
+{
+  "skills": [
+    {
+      "name": "openspec-apply-change",
+      "description": "Implement tasks from an OpenSpec change. Use when the user wants to start implementing, continue implementation, or work through tasks.",
+      "license": "MIT",
+      "metadata": {
+        "author": "openspec",
+        "version": "1.0",
+        "generatedBy": "1.3.1"
+      },
+      "path": ".well-known/skills/openspec-apply-change/SKILL.md",
+      "files": ["SKILL.md"]
+    },
+    {
+      "name": "openspec-archive-change",
+      "description": "Archive a completed change in the experimental workflow. Use when the user wants to finalize and archive a change after implementation is complete.",
+      "license": "MIT",
+      "metadata": {
+        "author": "openspec",
+        "version": "1.0",
+        "generatedBy": "1.3.1"
+      },
+      "path": ".well-known/skills/openspec-archive-change/SKILL.md",
+      "files": ["SKILL.md"]
+    },
+    {
+      "name": "openspec-explore",
+      "description": "Enter explore mode - a thinking partner for exploring ideas, investigating problems, and clarifying requirements. Use when the user wants to think through something before or during a change.",
+      "license": "MIT",
+      "metadata": {
+        "author": "openspec",
+        "version": "1.0",
+        "generatedBy": "1.3.1"
+      },
+      "path": ".well-known/skills/openspec-explore/SKILL.md",
+      "files": ["SKILL.md"]
+    },
+    {
+      "name": "openspec-propose",
+      "description": "Propose a new change with all artifacts generated in one step. Use when the user wants to quickly describe what they want to build and get a complete proposal with design, specs, and tasks ready for implementation.",
+      "license": "MIT",
+      "metadata": {
+        "author": "openspec",
+        "version": "1.0",
+        "generatedBy": "1.3.1"
+      },
+      "path": ".well-known/skills/openspec-propose/SKILL.md",
+      "files": ["SKILL.md"]
+    },
+    {
+      "name": "python-code-style",
+      "description": "Python code style, linting, formatting, naming conventions, and documentation standards. Use when writing new code, reviewing style, configuring linters, writing docstrings, or establishing project standards.",
+      "path": ".well-known/skills/python-code-style/SKILL.md",
+      "files": ["SKILL.md"]
+    }
+  ]
+}
