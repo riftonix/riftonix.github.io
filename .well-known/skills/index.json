@@ -9,7 +9,8 @@
         "version": "1.0",
         "generatedBy": "1.3.1"
       },
-      "path": ".well-known/skills/openspec-apply-change/SKILL.md"
+      "path": ".well-known/skills/openspec-apply-change/SKILL.md",
+      "files": ["SKILL.md"]
     },
     {
       "name": "openspec-archive-change",
@@ -20,7 +21,8 @@
         "version": "1.0",
         "generatedBy": "1.3.1"
       },
-      "path": ".well-known/skills/openspec-archive-change/SKILL.md"
+      "path": ".well-known/skills/openspec-archive-change/SKILL.md",
+      "files": ["SKILL.md"]
     },
     {
       "name": "openspec-explore",
@@ -31,7 +33,8 @@
         "version": "1.0",
         "generatedBy": "1.3.1"
       },
-      "path": ".well-known/skills/openspec-explore/SKILL.md"
+      "path": ".well-known/skills/openspec-explore/SKILL.md",
+      "files": ["SKILL.md"]
     },
     {
       "name": "openspec-propose",
@@ -42,12 +45,14 @@
         "version": "1.0",
         "generatedBy": "1.3.1"
       },
-      "path": ".well-known/skills/openspec-propose/SKILL.md"
+      "path": ".well-known/skills/openspec-propose/SKILL.md",
+      "files": ["SKILL.md"]
     },
     {
       "name": "python-code-style",
       "description": "Python code style, linting, formatting, naming conventions, and documentation standards. Use when writing new code, reviewing style, configuring linters, writing docstrings, or establishing project standards.",
-      "path": ".well-known/skills/python-code-style/SKILL.md"
+      "path": ".well-known/skills/python-code-style/SKILL.md",
+      "files": ["SKILL.md"]
     }
   ]
 }
