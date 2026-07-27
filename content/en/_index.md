@@ -22,8 +22,8 @@ linkTitle: Home
 
 {{% blocks/lead color="blue" %}}
 
-Tools and shared automation for devops, SRE, and platform engineers.
-RiftOniX projects focus on reproducible CI and Kubernetes delivery.
+Tools and shared automation for devops, SRE, and platform engineers. 
+RiftOniX projects focus on reproducible CI, cloud-native infrastructure, and Kubernetes delivery.
 
 {{% /blocks/lead %}}
 
