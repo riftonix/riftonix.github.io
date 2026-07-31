@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 env:
-  DAGGER_VERSION: 0.21.6
+  DAGGER_VERSION: 0.21.7
   STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.2.0
   HUGO_THEME_URL: github.com/google/docsy@v0.13.0
   SITE_DIR: .
