@@ -1,0 +1,28 @@
+{
+  "rules": [
+    {
+      "name": "no-em-dash",
+      "description": "Never use em dash (—, U+2014) or en dash (–, U+2013) in any output. Use the ASCII hyphen-minus (-, U+002D) instead.",
+      "path": ".well-known/rules/no-em-dash.md",
+      "files": ["no-em-dash.md"]
+    },
+    {
+      "name": "openspec-docs-sync",
+      "description": "When an OpenSpec proposal is archived, update the Diataxis docs/ directory to describe the implemented change. Do not copy proposal/design content; document current component state only.",
+      "path": ".well-known/rules/openspec-docs-sync.md",
+      "files": ["openspec-docs-sync.md"]
+    },
+    {
+      "name": "no-run-tests",
+      "description": "Do not run heavy integration tests or tests that produce large output yourself; tell the user to run them and provide the exact command (or commands) from AGENTS.md, README.md, or the project's package manifests. Fast, self-contained unit tests with small output may be run as normal. Linters, formatters, and typecheckers may still be run.",
+      "path": ".well-known/rules/no-run-tests.md",
+      "files": ["no-run-tests.md"]
+    },
+    {
+      "name": "no-unrequested-changes",
+      "description": "Do not write code, edit files, or take system-changing actions unless the user explicitly asks. By default, respond in chat only. Reading files, searching the codebase, and answering questions are always allowed.",
+      "path": ".well-known/rules/no-unrequested-changes.md",
+      "files": ["no-unrequested-changes.md"]
+    }
+  ]
+}
