@@ -25,6 +25,12 @@
       "files": ["standalone-specification-structure.md"]
     },
     {
+      "name": "documentation-language-style",
+      "description": "Write documentation consistently in its selected language while preserving exact technical identifiers, commands, paths, configuration values, API fields, and official product names. Applies to any document language.",
+      "path": ".well-known/rules/documentation-language-style.md",
+      "files": ["documentation-language-style.md"]
+    },
+    {
       "name": "no-run-tests",
       "description": "Do not run heavy integration tests or tests that produce large output yourself; tell the user to run them and provide the exact command (or commands) from AGENTS.md, README.md, or the project's package manifests. Fast, self-contained unit tests with small output may be run as normal. Linters, formatters, and typecheckers may still be run.",
       "path": ".well-known/rules/no-run-tests.md",
