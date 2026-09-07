@@ -18,7 +18,7 @@ fresh full read
 -> perform one minimal write
 -> read after the write
 -> verify boundaries, hierarchy, and invariants
--> continue or stop
+-> continue, compensate once, or stop
 ```
 
 Never assume that a section-update operation is inherently local. Its effective range depends on heading recognition and hierarchy.
@@ -50,7 +50,8 @@ Before the first write of an edit session, persist the raw storage fetched at th
 
 - The backup file is the known-good copy for recovery: the last verified state, not the initial state, once the session has progressed through successful writes.
 - Update or replace the backup after every verified write, so it always reflects the last known good version of the page.
-- On failure, restore from this local backup rather than Confluence page history by default. Page history rolls back the whole page and would discard concurrent edits by other users; a restore from the local backup can be applied surgically to the damaged range only. Restoring by any method still requires explicit user approval.
+- On failure, use this local backup as the known-good side of a three-way recovery rather than blindly replacing the current page or using Confluence page history. Page history and full backup replacement roll back the whole page and can discard concurrent edits.
+- Store backups only in the approved local workspace or temporary directory, with a name containing the page ID and verified version. Do not log raw page content. Treat the file as potentially confidential and delete it after final verification or after an unrecoverable stop unless retention is explicitly required by policy.
 - Keep the backup until the session is finished and the final verification has passed.
 
 ## Edit Session Continuity
@@ -118,7 +119,7 @@ When the target of an edit is a code block or a section containing code blocks:
 4. When replacing the body only, preserve the existing macro element and its parameters; submit the new content wrapped the same way as the original (CDATA inside `<ac:plain-text-body>`). Do not convert the block to a fenced Markdown snippet.
 5. When the requested change is a parameter change only (for example switching `language`), modify the parameter and keep the body untouched.
 6. Do not feed a code block through a Markdown round trip. Converting storage to Markdown and back can drop the `language` parameter, flatten CDATA, alter whitespace inside the block, and replace the macro with a plain code fence that loses syntax highlighting and collapse behavior.
-7. Never nest a `<![CDATA[` marker inside existing CDATA content. When the new body contains the `]]>` sequence, split it (for example `]]]]><![CDATA[>`) so the storage stays parseable, or ask the user to confirm a different representation.
+7. Never nest a `<![CDATA[` marker inside existing CDATA content. When the new body contains the `]]>` sequence, split it (for example `]]]]><![CDATA[>`) so the storage stays parseable. If the available tool cannot preserve that representation exactly, make no mutation and report the limitation instead of asking a follow-up question merely to continue the operation.
 
 Verify after the write:
 
@@ -134,12 +135,12 @@ If the edit cannot preserve the macro structure, stop and explain instead of rep
 A large page (tens of kilobytes of raw storage or more) changes the cost of every operation but not the safety model. All rules above still apply; this section adjusts the workflow for scale.
 
 - Measure before reading. Fetch page metadata first when the tool allows it (id, title, version, body size) and record the size. The size determines the strategy: what to cache, how to verify, and whether a full-page write is even feasible.
-- One full raw read per session remains mandatory regardless of size. Cache it: save the raw storage to a local working file and treat that file as the planning baseline. Plan edits by slicing the file, not by re-fetching the page.
+- One complete raw baseline per session remains mandatory regardless of size. It may come from one response or from a tool-supported paginated, ranged, or exported retrieval whose parts can be assembled and verified as complete. Cache it: save the raw storage to a local working file and treat that file as the planning baseline. Plan edits by slicing the file, not by re-fetching the page.
 - Never fetch both representations. Do not pull a Markdown conversion of a large page on top of raw storage; it doubles the context cost and adds nothing authoritative.
 - Detect truncation. MCP and API responses may silently truncate long bodies. After a full read, check completeness signals before trusting it: the storage parses, macro and section tags balance, and the known final section or footer text is present at the end. A truncated read is not a full read. Do not use it as a baseline; narrow the operation to a section-scoped read, or re-read in a way that returns the full body.
 - Prefer section-scoped updates. A full-page write on a large page amplifies every risk in this skill and may exceed tool payload limits. Section updates bound both the blast radius and the payload size.
 - Scale post-write verification. A full content diff after each write may be impractical. On a large page, verify: the version advanced as expected, the ordered heading inventory is unchanged outside the target, the target section content is exactly as intended, and control fragments before and after the target survived. On any mismatch or ambiguity, fall back to a full fresh read before writing again.
-- When the page exceeds what a single call can return (tool truncation, payload limits), do not attempt a full-page write at all. Propose alternatives to the user: edit via a section-scoped tool with a locally narrowed read, split the page into child pages, or make the change manually. Never write against a baseline that could not be read completely.
+- When the page exceeds what a single call can return, assemble a complete baseline only through tool-supported pagination, ranges, or export. If completeness still cannot be proven, do not attempt a full-page write. Use a section-scoped operation only when the section and both boundaries can be read completely and independently verified; otherwise make no mutation and report the limitation in the completion report. Never write against a baseline that could not be read completely enough for the selected operation.
 
 ## Preserve Heading Hierarchy
 
@@ -250,18 +251,53 @@ Stop and refresh the full baseline when:
 
 Do not overwrite concurrent changes. Re-read, identify the external modifications, and reapply only the user's requested change against the new state.
 
+## Deterministic Recovery
+
+Post-write damage does not automatically end the user's operation. When the damage is deterministic and recoverable, perform one checked compensating transaction without asking the user for approval.
+
+Build recovery from three states:
+
+```text
+last verified baseline
++ current damaged page
++ intended user change
+-> recovered current page
+```
+
+Use the current damaged page as the starting point. Restore from the last verified baseline only the content proven to have been removed or structurally altered by the failed write, preserve non-conflicting concurrent changes, and reapply the intended user change. Never replace the current page wholesale with the backup.
+
+Automatic recovery is allowed only when all of these conditions hold:
+
+- the backup and required current read are complete for the damaged range;
+- the damaged range and its structural boundaries are unambiguous;
+- the intended change is represented exactly and can be applied idempotently;
+- differences outside the failed write can be classified and preserved;
+- no concurrent change conflicts inside the range being reconstructed;
+- macros, layouts, tables, anchors, code blocks, and heading levels can be restored without lossy conversion;
+- the compensating write is guarded by the freshly read current version;
+- the result can be fully verified after the write.
+
+Before compensating, determine whether the intended target state is already present. An ambiguous write response may hide a successful mutation; never apply the same change twice. Use exact target content, structural invariants, and, when available, an operation identifier or content hash to recognize an already-applied change.
+
+The recovery budget is exactly one compensating write per failure. A compensating write is not a retry of the same unsafe operation: it is a newly computed, version-guarded mutation against the freshly read current state. If its preconditions become stale, it fails, or post-write verification does not pass, perform no further mutation.
+
+When recovery is ambiguous or unsafe, preserve the current state, stop further writes, and report the unresolved damage and reason in the completion report. Do not ask a follow-up question merely to continue the same operation.
+
 ## Failure Handling
 
 If a write removes later sections, changes heading levels, or damages macros:
 
-1. Stop all further writes immediately.
+1. Stop the planned edit series immediately, but keep the user operation active for deterministic recovery.
 2. Record the bad version and the last known good version.
-3. Re-fetch raw storage and inspect the exact damage.
-4. Do not attempt another speculative section update.
-5. Restore only with explicit user approval, using the session backup file (the known-good raw body, see Mandatory Backup) applied to the damaged range; use Confluence page history only when no valid backup exists or the user explicitly prefers it.
-6. After restoration, verify the complete heading inventory and neighboring content.
+3. Re-fetch complete current raw storage and inspect the exact damage.
+4. Determine whether the intended change already exists; do not duplicate it after an ambiguous response.
+5. Compute a three-way recovery from the last verified baseline, current damaged page, and intended user change.
+6. If every condition in Deterministic Recovery holds, perform exactly one minimal, version-guarded compensating write.
+7. After compensation, re-read and verify the target, complete heading inventory, damaged range, neighboring content, and preserved concurrent changes.
+8. If recovery is ambiguous, conflicts with a concurrent edit, or fails verification, perform no further writes and report the unresolved state.
+9. Use Confluence page history only when explicitly requested or when an authorized recovery policy outside this skill requires it; never use it automatically when it can discard concurrent changes.
 
-A second write is not a safe automatic response to a failed first write.
+A speculative retry is prohibited. One deterministic, version-guarded compensating write is allowed when it preserves concurrent changes and can be fully verified.
 
 ## Prohibited Practices
 
@@ -275,6 +311,9 @@ A second write is not a safe automatic response to a failed first write.
 - Do not trust a successful MCP response without a post-write read.
 - Do not report success when neighboring headings or content were not checked.
 - Do not silently repair unrelated page content.
+- Do not replace the current page wholesale with a stale backup.
+- Do not perform more than one compensating write for one failure.
+- Do not ask the user for permission when deterministic recovery satisfies every recovery precondition; recover and disclose the incident in the completion report.
 
 ## Minimal Safe Workflow
 
@@ -288,8 +327,8 @@ A second write is not a safe automatic response to a failed first write.
 7. Apply one write.
 8. Fetch the page again.
 9. Verify version, target, hierarchy, next sibling, later sections, and macros.
-10. Continue from the verified state or stop on any mismatch.
-11. After the final write, perform a final structural and content verification.
+10. Continue from the verified state; on mismatch, perform one deterministic compensation when safe, otherwise stop mutations.
+11. After the final or compensating write, perform a final structural and content verification.
 ```
 
 ## Completion Report
@@ -300,6 +339,9 @@ State:
 - the starting and ending page versions;
 - that the heading hierarchy was checked;
 - that following sections and nearby Confluence elements were preserved;
-- any content that could not be changed safely.
+- any content that could not be changed safely;
+- whether post-write damage occurred;
+- whether deterministic recovery was attempted and verified;
+- any unresolved damage, conflict, or manual recovery requirement.
 
 Keep the report factual. Do not claim that the page was preserved unless the post-write checks were actually performed.
