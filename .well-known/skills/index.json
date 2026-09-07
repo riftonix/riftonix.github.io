@@ -457,10 +457,37 @@
       ]
     },
     {
-      "name": "confluence-safe-editing",
-      "description": "Safely read and edit Confluence pages through MCP tools while preserving heading hierarchy, neighboring sections, macros, layouts, and concurrent user changes. Use for any Confluence page mutation, especially section updates, multi-step edit batches, or pages with nested headings.",
-      "path": ".well-known/skills/confluence-safe-editing/SKILL.md",
-      "files": ["SKILL.md"]
+      "name": "confluence-content-management",
+      "description": "Manage Confluence documentation with downloads, uploads, conversions, and diagrams. Use when asked to \"download Confluence pages\", \"upload to Confluence\", \"convert Wiki Markup\", \"sync markdown to Confluence\", \"create Confluence page\", or \"handle Confluence images\".",
+      "metadata": {
+        "version": "2.1.0",
+        "source": "https://github.com/SpillwaveSolutions/confluence-skill",
+        "revision": "b93d2efd9984c6de17ae0b1da04c215c5ca7cd72"
+      },
+      "path": ".well-known/skills/confluence-content-management/SKILL.md",
+      "files": [
+        "SKILL.md",
+        "examples/.env.confluence.example",
+        "examples/.env.example",
+        "examples/page_ids.example.txt",
+        "examples/sample-confluence-page.md",
+        "examples/upload_example.md",
+        "references/confluence_storage_format.md",
+        "references/conversion_guide.md",
+        "references/image_handling_best_practices.md",
+        "references/mark_tool_guide.md",
+        "references/troubleshooting_guide.md",
+        "references/wiki_markup_guide.md",
+        "scripts/confluence_auth.py",
+        "scripts/convert_markdown_to_wiki.py",
+        "scripts/download_confluence.py",
+        "scripts/generate_mark_metadata.py",
+        "scripts/mermaid_renderer.py",
+        "scripts/render_mermaid.py",
+        "scripts/requirements.txt",
+        "scripts/upload_confluence.py",
+        "scripts/upload_confluence_v2.py"
+      ]
     }
   ]
 }
