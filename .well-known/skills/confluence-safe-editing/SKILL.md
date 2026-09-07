@@ -1,5 +1,5 @@
 ---
-name: safe-confluence-editing
+name: confluence-safe-editing
 description: Safely read and edit Confluence pages through MCP tools while preserving heading hierarchy, neighboring sections, macros, layouts, and concurrent user changes. Use for any Confluence page mutation, especially section updates, multi-step edit batches, or pages with nested headings.
 ---
 
