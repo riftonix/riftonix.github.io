@@ -44,6 +44,15 @@ Prefer `confluence_get_page` with `convert_to_markdown: false` for structural in
 
 One fresh full read is enough at the beginning of a continuous edit series. Do not fetch the entire page again before every write when each previous write has been followed by a successful verification read.
 
+## Mandatory Backup
+
+Before the first write of an edit session, persist the raw storage fetched at the start, together with the page ID, title, and version, to a local backup file. This is a required step, not an optimization.
+
+- The backup file is the known-good copy for recovery: the last verified state, not the initial state, once the session has progressed through successful writes.
+- Update or replace the backup after every verified write, so it always reflects the last known good version of the page.
+- On failure, restore from this local backup rather than Confluence page history by default. Page history rolls back the whole page and would discard concurrent edits by other users; a restore from the local backup can be applied surgically to the damaged range only. Restoring by any method still requires explicit user approval.
+- Keep the backup until the session is finished and the final verification has passed.
+
 ## Edit Session Continuity
 
 A series remains continuous only while all of these conditions hold:
@@ -119,6 +128,18 @@ Verify after the write:
 - neighboring code blocks and their parameters are unchanged.
 
 If the edit cannot preserve the macro structure, stop and explain instead of replacing the code macro with plain Markdown.
+
+## Large Pages
+
+A large page (tens of kilobytes of raw storage or more) changes the cost of every operation but not the safety model. All rules above still apply; this section adjusts the workflow for scale.
+
+- Measure before reading. Fetch page metadata first when the tool allows it (id, title, version, body size) and record the size. The size determines the strategy: what to cache, how to verify, and whether a full-page write is even feasible.
+- One full raw read per session remains mandatory regardless of size. Cache it: save the raw storage to a local working file and treat that file as the planning baseline. Plan edits by slicing the file, not by re-fetching the page.
+- Never fetch both representations. Do not pull a Markdown conversion of a large page on top of raw storage; it doubles the context cost and adds nothing authoritative.
+- Detect truncation. MCP and API responses may silently truncate long bodies. After a full read, check completeness signals before trusting it: the storage parses, macro and section tags balance, and the known final section or footer text is present at the end. A truncated read is not a full read. Do not use it as a baseline; narrow the operation to a section-scoped read, or re-read in a way that returns the full body.
+- Prefer section-scoped updates. A full-page write on a large page amplifies every risk in this skill and may exceed tool payload limits. Section updates bound both the blast radius and the payload size.
+- Scale post-write verification. A full content diff after each write may be impractical. On a large page, verify: the version advanced as expected, the ordered heading inventory is unchanged outside the target, the target section content is exactly as intended, and control fragments before and after the target survived. On any mismatch or ambiguity, fall back to a full fresh read before writing again.
+- When the page exceeds what a single call can return (tool truncation, payload limits), do not attempt a full-page write at all. Propose alternatives to the user: edit via a section-scoped tool with a locally narrowed read, split the page into child pages, or make the change manually. Never write against a baseline that could not be read completely.
 
 ## Preserve Heading Hierarchy
 
@@ -237,7 +258,7 @@ If a write removes later sections, changes heading levels, or damages macros:
 2. Record the bad version and the last known good version.
 3. Re-fetch raw storage and inspect the exact damage.
 4. Do not attempt another speculative section update.
-5. Restore only with explicit user approval, using Confluence page history or a known-good raw body.
+5. Restore only with explicit user approval, using the session backup file (the known-good raw body, see Mandatory Backup) applied to the damaged range; use Confluence page history only when no valid backup exists or the user explicitly prefers it.
 6. After restoration, verify the complete heading inventory and neighboring content.
 
 A second write is not a safe automatic response to a failed first write.
