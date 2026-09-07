@@ -41,6 +41,12 @@
       "description": "Do not write code, edit files, or take system-changing actions unless the user explicitly asks. By default, respond in chat only. Reading files, searching the codebase, and answering questions are always allowed.",
       "path": ".well-known/rules/no-unrequested-changes.md",
       "files": ["no-unrequested-changes.md"]
+    },
+    {
+      "name": "kubernetes-operations-safety",
+      "description": "Verify the current kubectl context, set the namespace explicitly, read before write, diff before apply, and confirm rollout status. Never delete, force, or modify Secrets without explicit user intent, and never switch context implicitly.",
+      "path": ".well-known/rules/kubernetes-operations-safety.md",
+      "files": ["kubernetes-operations-safety.md"]
     }
   ]
 }
