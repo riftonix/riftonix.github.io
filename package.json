@@ -1,0 +1,7 @@
+{
+  "name": "riftonix.github.io",
+  "private": true,
+  "devDependencies": {
+    "@docsy/theme": "0.17.0"
+  }
+}

@@ -4,6 +4,8 @@ enableRobotsTXT: true
 
 contentDir: content/en
 defaultContentLanguage: en
+theme: "@docsy/theme"
+themesDir: node_modules
 
 markup:
   goldmark:
@@ -33,11 +35,3 @@ params:
         url: https://t.me/riftonix
         icon: fab fa-telegram
         desc: Join the RiftOniX community.
-
-module:
-  proxy: direct
-  hugoVersion:
-    extended: true
-  imports:
-    - path: github.com/google/docsy
-      disable: false

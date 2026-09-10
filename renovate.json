@@ -5,7 +5,7 @@
   "automergeType": "pr",
   "platformAutomerge": true,
   "dependencyDashboard": true,
-  "enabledManagers": ["github-actions", "gomod", "custom.regex"],
+  "enabledManagers": ["github-actions", "npm", "custom.regex"],
   "customManagers": [
     {
       "customType": "regex",
@@ -35,17 +35,11 @@
     },
     {
       "matchDepNames": [
-        "github.com/google/docsy",
-        "google/docsy",
+        "@docsy/theme",
         "ghcr.io/riftonix/container-images/hugo-autoprefixer"
       ],
       "groupName": "hugo docsy site",
       "labels": ["dependencies", "hugo"]
-    },
-    {
-      "matchManagers": ["gomod"],
-      "groupName": "go modules",
-      "labels": ["dependencies", "go"]
     }
   ],
   "prConcurrentLimit": 5,

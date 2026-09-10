@@ -17,11 +17,9 @@ env:
   # renovate: datasource=repology depName=manjaro_stable/dagger
   DAGGER_VERSION: 0.21.9
   # renovate: datasource=github-tags depName=riftonix/daggerverse versioning=semver extractVersion=^scenarios/static-site/(?<version>v.*)$
-  STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.3.0
-  # renovate: datasource=github-releases depName=google/docsy versioning=semver
-  HUGO_THEME_URL: github.com/google/docsy@v0.13.0
+  STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.4.0
   # renovate: datasource=docker depName=ghcr.io/riftonix/container-images/hugo-autoprefixer versioning=loose
-  HUGO_IMAGE_TAG: 0.154.5-10.5.0
+  HUGO_IMAGE_TAG: 0.165.0-10.5.5
   SITE_DIR: .
   SITE_BASE_URL: https://riftonix.io/
   SITE_OUTPUT_DIR: public
@@ -58,7 +56,6 @@ jobs:
         run: |
           dagger --progress=plain -m "$STATIC_SITE_MODULE" call \
             --source="$SITE_DIR" \
-            --hugo-theme-url="$HUGO_THEME_URL" \
             --hugo-image-tag="$HUGO_IMAGE_TAG" \
             verify-site \
             --site-base-url="$SITE_BASE_URL" \
@@ -108,7 +105,6 @@ jobs:
         run: |
           dagger --progress=plain -m "$STATIC_SITE_MODULE" call \
             --source="$SITE_DIR" \
-            --hugo-theme-url="$HUGO_THEME_URL" \
             --hugo-image-tag="$HUGO_IMAGE_TAG" \
             render-site \
             --site-base-url="$SITE_BASE_URL" \
