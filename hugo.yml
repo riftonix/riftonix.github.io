@@ -38,7 +38,6 @@ module:
   proxy: direct
   hugoVersion:
     extended: true
-    min: 0.127.0
   imports:
     - path: github.com/google/docsy
       disable: false
