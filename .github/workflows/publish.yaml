@@ -15,7 +15,7 @@ env:
   STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.3.0
   # renovate: datasource=github-releases depName=google/docsy versioning=semver
   HUGO_THEME_URL: github.com/google/docsy@v0.13.0
-  # renovate: datasource=docker depName=ghcr.io/riftonix/container-images/hugo-autoprefixer
+  # renovate: datasource=docker depName=ghcr.io/riftonix/container-images/hugo-autoprefixer versioning=loose
   HUGO_IMAGE_TAG: 0.154.5-10.5.0
   SITE_DIR: .
   SITE_BASE_URL: https://riftonix.io/
