@@ -14,8 +14,11 @@ permissions:
   contents: read
 
 env:
+  # renovate: datasource=repology depName=manjaro_stable/dagger
   DAGGER_VERSION: 0.21.9
+  # renovate: datasource=git-tags depName=riftonix/daggerverse versioning=semver extractVersion=^scenarios/static-site/v(?<version>.*)$
   STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.2.0
+  # renovate: datasource=github-releases depName=google/docsy versioning=semver
   HUGO_THEME_URL: github.com/google/docsy@v0.13.0
   SITE_DIR: .
   SITE_BASE_URL: https://riftonix.io/
