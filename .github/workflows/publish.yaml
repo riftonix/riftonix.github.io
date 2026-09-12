@@ -14,7 +14,7 @@ env:
   # renovate: datasource=github-tags depName=riftonix/daggerverse versioning=semver extractVersion=^scenarios/static-site/(?<version>v.*)$
   STATIC_SITE_MODULE: github.com/riftonix/daggerverse/scenarios/static-site@scenarios/static-site/v0.4.0
   # renovate: datasource=docker depName=ghcr.io/riftonix/container-images/hugo-autoprefixer versioning=loose
-  HUGO_IMAGE_TAG: 0.165.0-10.5.6
+  HUGO_IMAGE_TAG: 0.165.0-10.6.0
   SITE_DIR: .
   SITE_BASE_URL: https://riftonix.io/
   SITE_OUTPUT_DIR: public
