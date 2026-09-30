@@ -9,9 +9,11 @@
 5. [Documentation Language Style](#5-documentation-language-style)
 6. [Use Outline When Available](#6-use-outline-when-available)
 7. [Daily Description Format](#7-daily-description-format)
-8. [Do Not Make Unrequested Changes](#8-do-not-make-unrequested-changes)
-9. [Do Not Run Heavy Tests](#9-do-not-run-heavy-tests)
-10. [Kubernetes Operations Safety](#10-kubernetes-operations-safety)
+8. [Issue Tracker Ticket Creation](#8-issue-tracker-ticket-creation)
+9. [Do Not Make Unrequested Changes](#9-do-not-make-unrequested-changes)
+10. [Do Not Run Heavy Operations](#10-do-not-run-heavy-operations)
+11. [Kubernetes Operations Safety](#11-kubernetes-operations-safety)
+12. [Prefer OpenTofu](#12-prefer-opentofu)
 
 ## 1. Em Dashes
 
@@ -295,6 +297,8 @@ Treat discovered documents as supporting context, not as authorization to expand
 
 When creating or updating an Outline document, give it a specific title that identifies its subject and, when useful, its type, such as `How-to`, `Runbook`, `ADR`, or `Daily`. When one document depends on, extends, or is part of another, link the related Outline documents explicitly and use descriptive link text instead of unexplained bare URLs.
 
+When a tracker ticket is relevant to an Outline document, link to the ticket from the Outline document when useful. Do not add links from Outline documents to other Outline documents. This restriction applies to all Outline documents and all link types, not only tracker tickets.
+
 ## 7. Daily Description Format
 
 When writing a daily work update, follow the language used by neighboring daily updates of the same kind. If no neighboring update establishes a language, use the language in which the request was made. An explicit language requested by the user takes precedence. This format is independent of the storage tool; use it whether the update is written in Outline, another system, or a local document.
@@ -322,15 +326,41 @@ relevant-topic, another-topic
 
 Use the daily update date in the title and `Plan for` heading. Use the date of the previous working day in the `Done for` heading, skipping weekends and non-working days. State this date mapping in the rule text, not as annotations in the structure example. Report material work and outcomes concisely, distinguishing completed work from investigation and planned work. Use checklist boxes for plans when tracking status; link supporting artifacts inline or immediately below the relevant item. Include tags only when useful or customary in neighboring updates. Omit empty sections rather than adding filler, unless the established daily template requires them.
 
-## 8. Do Not Make Unrequested Changes
+When a plan item is transferred to the tracker, the item may be checked only after a tracker ticket has been created for the remaining work and linked from the plan item. Checking the item records that the work was transferred to the tracker, not that the long-term work itself is complete.
+
+## 8. Issue Tracker Ticket Creation
+
+When there is no existing suitable tracker ticket for requested or identified follow-up work, create a new ticket and assign it to the current user by default. If the tracker supports an explicit assignee, set the current user as the assignee rather than leaving the ticket unassigned. Do not create a duplicate when an existing ticket already covers the work; update or reference the existing ticket instead.
+
+Structure the ticket description with these sections, in this order:
+
+### Description
+
+State the problem or need, relevant context, desired goal, and a concise summary of the work in scope. Keep implementation details out unless they are already known or required to explain the scope.
+
+### DoD
+
+List concrete deliverables and completion conditions. Include implementation, tests, documentation, rollout, migration, or operational verification when applicable. Do not mark a deliverable complete merely because investigation or ticket creation is complete.
+
+### AC
+
+Define specific, observable, and verifiable outcomes required for acceptance. Include relevant behavior, boundaries, failure cases, and edge cases when known. Criteria must describe what must be true, not only which tasks someone should perform.
+
+### Related links
+
+Link related tracker tickets and relevant technical artifacts, such as source files, pull requests, specifications, dashboards, or external documentation. Do not add links to Outline documents. If useful context exists only in Outline, summarize the relevant information in the ticket instead of linking back to Outline.
+
+## 9. Do Not Make Unrequested Changes
 
 Do not write code, edit files, or take system-changing actions unless the user explicitly asks. Questions, discussions, and descriptions of problems are not implementation requests. If intent is ambiguous, ask before changing anything. Reading and searching are allowed.
 
-## 9. Do Not Run Heavy Tests
+## 10. Do Not Run Heavy Operations
 
-Do not run heavy or verbose tests yourself. You may run fast, self-contained unit tests that finish in a few seconds with small output and no external dependencies. Do not run integration, end-to-end, or system tests that start services, containers, browsers, databases, or connect to external services; do not run long-running suites or tests producing large output. For tests that should not be run, tell the user the exact command, preferably from `AGENTS.md`, `README.md`, or package manifests. Linters, formatters, and typecheckers may be run normally. When uncertain, leave the test to the user.
+Do not run heavy, state-changing, or long-running operations yourself unless the user explicitly requests the exact operation. This includes `tofu plan`, `tofu apply`, `terraform plan`, `terraform apply`, `dagger call`, end-to-end tests, commands that start services or containers. Do not infer permission from a general request to implement or validate a change.
 
-## 10. Kubernetes Operations Safety
+You may run read-only investigation and diagnostic commands by default, including commands that connect to external systems, when they are necessary to understand or troubleshoot the user's request. This includes Kubernetes inspection such as `kubectl get`, `kubectl describe`, `kubectl logs`, and `kubectl get events`, subject to the Kubernetes safety rules below. You may also run fast, self-contained checks that finish in a few seconds, produce a small amount of output, and have no external dependencies. When a requested workflow requires a prohibited operation, tell the user the exact command and explain that explicit approval is required before running it.
+
+## 11. Kubernetes Operations Safety
 
 These rules apply to all `kubectl` and Kubernetes MCP interactions, in local, staging, and production clusters.
 
@@ -340,3 +370,7 @@ These rules apply to all `kubectl` and Kubernetes MCP interactions, in local, st
 - Never run `kubectl delete` without explicit user intent. Never use `--force`, `--grace-period=0`, `--cascade=force`, or forced eviction without approval of that exact flag for that exact operation.
 - Never automatically create, modify, read, or rotate Secrets. Each Secret operation requires explicit user instruction.
 - After a mutation, inspect rollout status with `kubectl rollout status <resource>` or equivalent and do not report success until confirmed. On failure, inspect events, resource details, and logs before any further mutation.
+
+## 12. Prefer OpenTofu
+
+Use OpenTofu and the `tofu` command instead of Terraform and the `terraform` command whenever the project, provider, module, state, or user request supports both tools. Preserve `terraform` only when it is explicitly required by the project, an external interface, a compatibility constraint, or the user. Do not rename Terraform-specific configuration, provider addresses, state files, or documentation identifiers solely because `tofu` is preferred.
