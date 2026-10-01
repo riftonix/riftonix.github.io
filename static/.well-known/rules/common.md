@@ -192,8 +192,7 @@ Use this guidance for product, business, system, or solution specifications outs
 
 ### General Principles and Language
 
-- Treat every section as optional. Include it only when reliable context exists and it helps explain or verify the change.
-- Omit inapplicable sections without empty headings, and tell the user which planned sections were omitted.
+- Keep the planned sections in the specification. When a section does not apply to the current task, retain its heading and explicitly state that it is not applicable, for example `Not applicable to this task`, using the document's selected language. Do not leave the section ambiguous or silently omit it.
 - Never invent facts, targets, examples, decisions, or assumptions. Distinguish known facts, confirmed decisions, assumptions, and open questions. Ask for missing context required to write an accurate specification.
 - Keep each fact authoritative in one place. Write testable requirements and use consistent identifiers when useful, such as `P-001`, `FR-001`, `NFR-001`, and `BR-001`.
 - Use the language of adjacent specifications for the same audience. Otherwise continue the document's language, defaulting to English. An explicit user request takes precedence. Keep one language throughout unless multilingual content is requested.
@@ -259,7 +258,7 @@ Describe only the design that satisfies confirmed requirements. Include architec
 
 ### Completeness Review
 
-Before finalizing, remove empty sections and disclose inapplicable sections. Confirm no unsupported claims were invented, requirements are testable, goals address documented problems, scenarios trace to requirements, design meets requirements without silently adding scope, error handling is consistent, and compatibility aligns with migration and rollback. Identify missing information needed for implementation or acceptance.
+Before finalizing, confirm that every planned section is either completed or explicitly marked as not applicable to the current task. Do not leave empty or ambiguous sections. Confirm no unsupported claims were invented, requirements are testable, goals address documented problems, scenarios trace to requirements, design meets requirements without silently adding scope, error handling is consistent, and compatibility aligns with migration and rollback. Identify missing information needed for implementation or acceptance.
 
 ## 5. Documentation Language Style
 
