@@ -297,6 +297,8 @@ Treat discovered documents as supporting context, not as authorization to expand
 
 When creating or updating an Outline document, give it a specific title that identifies its subject and, when useful, its type, such as `How-to`, `Runbook`, `ADR`, or `Daily`. When one document depends on, extends, or is part of another, link the related Outline documents explicitly and use descriptive link text instead of unexplained bare URLs.
 
+Before making any change to an existing Outline document, always read its current content first. Base the update on the latest content returned by Outline and preserve unrelated material unless the user explicitly requests its removal or replacement.
+
 When a tracker ticket is relevant to an Outline document, link to the ticket from the Outline document when useful. Do not add links from Outline documents to other Outline documents. This restriction applies to all Outline documents and all link types, not only tracker tickets.
 
 ## 7. Daily Description Format
@@ -314,6 +316,10 @@ Use the following structure and keep its headings in English:
 - Findings or blockers, including their impact where known.
 - Links to relevant changes, issues, merge requests, test evidence, or source material.
 
+## Notes
+
+- Useful information discovered during the workday, including technical findings, decisions, caveats, or context that may be useful later.
+
 ## Plan for YYYY.MM.DD
 
 - [ ] Planned task with a clear, actionable outcome.
@@ -324,7 +330,7 @@ Use the following structure and keep its headings in English:
 relevant-topic, another-topic
 ```
 
-Use the daily update date in the title and `Plan for` heading. Use the date of the previous working day in the `Done for` heading, skipping weekends and non-working days. State this date mapping in the rule text, not as annotations in the structure example. Report material work and outcomes concisely, distinguishing completed work from investigation and planned work. Use checklist boxes for plans when tracking status; link supporting artifacts inline or immediately below the relevant item. Include tags only when useful or customary in neighboring updates. Omit empty sections rather than adding filler, unless the established daily template requires them.
+Use the daily update date in the title and `Plan for` heading. Use the date of the previous working day in the `Done for` heading, skipping weekends and non-working days. State this date mapping in the rule text, not as annotations in the structure example. Use `Notes` for useful information discovered during the workday, such as technical findings, decisions, caveats, or context that may be useful later. Report material work and outcomes concisely, distinguishing completed work from investigation and planned work. Use checklist boxes for plans when tracking status; link supporting artifacts inline or immediately below the relevant item. Include tags only when useful or customary in neighboring updates. Omit empty sections rather than adding filler, unless the established daily template requires them.
 
 When a plan item is transferred to the tracker, the item may be checked only after a tracker ticket has been created for the remaining work and linked from the plan item. Checking the item records that the work was transferred to the tracker, not that the long-term work itself is complete.
 
