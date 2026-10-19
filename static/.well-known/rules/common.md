@@ -309,7 +309,7 @@ Use the following structure and keep its headings in English:
 ```markdown
 # Daily YYYY.MM.DD
 
-## Done for YYYY.MM.DD
+## Done
 
 - Completed work, with concrete outcome and relevant technical detail.
 - Findings or blockers, including their impact where known.
@@ -319,7 +319,7 @@ Use the following structure and keep its headings in English:
 
 - Useful information discovered during the workday, including technical findings, decisions, caveats, or context that may be useful later.
 
-## Plan for YYYY.MM.DD
+## Plan
 
 - [ ] Planned task with a clear, actionable outcome.
 - [x] Completed task, when tracking completion in the same update.
@@ -329,7 +329,7 @@ Use the following structure and keep its headings in English:
 relevant-topic, another-topic
 ```
 
-Use the daily update date in the title and `Plan for` heading. Use the date of the previous working day in the `Done for` heading, skipping weekends and non-working days. State this date mapping in the rule text, not as annotations in the structure example. Use `Notes` for useful information discovered during the workday, such as technical findings, decisions, caveats, or context that may be useful later. Report material work and outcomes concisely, distinguishing completed work from investigation and planned work. Use checklist boxes for plans when tracking status; link supporting artifacts inline or immediately below the relevant item. Include tags only when useful or customary in neighboring updates. Omit empty sections rather than adding filler, unless the established daily template requires them.
+Use the daily update date in the title only; do not include dates in section headings. `Done` covers the previous working day, skipping weekends and non-working days. `Plan` covers the daily update date. State this date mapping in the rule text, not as annotations in the structure example. Use `Notes` for useful information discovered during the workday, such as technical findings, decisions, caveats, or context that may be useful later. Report material work and outcomes concisely, distinguishing completed work from investigation and planned work. Use checklist boxes for plans when tracking status; link supporting artifacts inline or immediately below the relevant item. Include tags only when useful or customary in neighboring updates. Omit empty sections rather than adding filler, unless the established daily template requires them.
 
 When a plan item is transferred to the tracker, the item may be checked only after a tracker ticket has been created for the remaining work and linked from the plan item. Checking the item records that the work was transferred to the tracker, not that the long-term work itself is complete.
 
