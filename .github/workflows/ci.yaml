@@ -129,7 +129,7 @@ jobs:
 
       - name: Deploy pull request preview
         if: ${{ !env.ACT }}
-        uses: rossjrw/pr-preview-action@v1.8.1
+        uses: rossjrw/pr-preview-action@v1.8.2
         with:
           source-dir: ${{ env.SITE_OUTPUT_DIR }}
           preview-branch: gh-pages
