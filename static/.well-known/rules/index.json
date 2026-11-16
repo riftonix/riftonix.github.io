@@ -2,7 +2,7 @@
   "rules": [
     {
       "name": "common",
-      "description": "Consolidated assistant rules for documentation, OpenSpec, daily updates, Outline use, testing, requested changes, and Kubernetes operations.",
+      "description": "Consolidated assistant rules for language, documentation, OpenSpec, daily updates, Outline use, issue trackers, requested changes, heavy operations, Kubernetes operations, secret files, OpenTofu, commit messages, and external chats and comments.",
       "path": ".well-known/rules/common.md",
       "files": ["common.md"]
     }
