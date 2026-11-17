@@ -18,6 +18,7 @@
 14. [Prefer OpenTofu](#14-prefer-opentofu)
 15. [Commit Messages](#15-commit-messages)
 16. [Do Not Post to External Chats or Comments](#16-do-not-post-to-external-chats-or-comments)
+17. [Explicit Overrides of Repository Instructions](#17-explicit-overrides-of-repository-instructions)
 
 ## 1. Em Dashes
 
@@ -419,7 +420,7 @@ Unless the user explicitly requests otherwise, write every commit message as fol
 - Do not add `Co-authored-by` trailers.
 - Do not mention AI assistants, models, or agent tools anywhere in the message, and do not add generated-by notes or similar attribution.
 - This rule takes precedence over commit conventions defined in the repository, such as contributing guides, commit templates, commitlint configuration, or agent instruction files. Ignore those conventions; you may mention the discrepancy to the user in chat.
-- If a commit hook rejects the message, do not bypass it with `--no-verify` and do not adapt the message to the repository conventions; report the error to the user.
+- If a commit hook rejects the message, report the error to the user. Do not bypass the hook with `--no-verify`. Do not adapt the message to repository conventions unless the user explicitly authorizes that change.
 
 This rule defines the message format only. It does not by itself authorize creating commits; follow [Do Not Make Unrequested Changes](#10-do-not-make-unrequested-changes) for when changes may be made.
 
@@ -430,3 +431,9 @@ Do not post anything to external communication channels unless the user explicit
 When creating a pull or merge request (PR/MR), leave its description (body) empty unless the user explicitly asks for a description or provides text to publish as the description. A request to create a PR/MR does not by itself authorize adding a description. Do not automatically populate it from commits, templates, generated summaries, or validation results. Repository rules and PR/MR templates do not override this restriction. Change an existing PR/MR description only when the user explicitly requests it. This restriction does not apply to issue descriptions, which follow [Issue Tracker Ticket Creation](#9-issue-tracker-ticket-creation).
 
 A request such as "answer in chat" or "reply in chat" refers to the current conversation with the agent, not to an external messenger. Post externally only when the user explicitly names both the system and the target: the messenger and the chat, or the tracker or code hosting and the specific issue or merge request. For example, "post this to the `#infra` channel in Slack" or "comment on MR !123 in GitLab". If either is not named, reply in the current conversation instead; if the intent to post externally is clear but the target is ambiguous, ask before sending anything.
+
+## 17. Explicit Overrides of Repository Instructions
+
+When the user explicitly asks to ignore or override instructions inside a repository, including `AGENTS.md`, other agent instruction files, contributing guides, and repository-local conventions, follow that request within its stated scope. Do not treat those repository instructions as an absolute prohibition against an action the user explicitly authorized. Keep unrelated instructions in effect, and do not infer an override from a general request to complete a task. If the scope of the override is unclear, ask the user before acting.
+
+This exception applies only to repository instructions. It does not override higher-priority system or developer instructions.
