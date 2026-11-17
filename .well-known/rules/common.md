@@ -374,6 +374,8 @@ Link related tracker tickets and relevant technical artifacts, such as source fi
 
 Do not write code, edit files, or take system-changing actions unless the user explicitly asks. Questions, discussions, and descriptions of problems are not implementation requests. If intent is ambiguous, ask before changing anything. Reading and searching are allowed.
 
+Before asking the user to approve a change or state-changing operation, show the exact command you intend to execute, including its arguments, target, and working directory when relevant. If several commands require approval, list them in execution order. For changes made through tools rather than shell commands, show the tool or API operation and the relevant parameters or proposed diff. Never expose secret values; use variable references or secret placeholders instead. Ask for approval only after presenting these details. This requirement does not introduce additional approval steps for actions the user has already authorized.
+
 An action that another rule defines as part of a requested operation counts as requested, for example the documentation update in [OpenSpec Documentation Sync](#3-openspec-documentation-sync) when an OpenSpec change is archived.
 
 ## 11. Do Not Run Heavy Operations
