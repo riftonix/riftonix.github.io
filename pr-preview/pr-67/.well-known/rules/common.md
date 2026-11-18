@@ -313,7 +313,7 @@ Outline documents may link to related Outline documents and to external sources,
 
 ## 8. Short-Form Work Communication
 
-Use this style for daily reports, brief merge and pull request (MR/PR) descriptions, short messages in work correspondence, and task descriptions in tracker tickets, including descriptions of work that has not started. Keep the problem, goal, and scope concise in the ticket's `Description` section without presenting planned work as a result. Preserve any required sections. Follow [Issue Tracker Ticket Creation](#9-issue-tracker-ticket-creation) for ticket structure and [Do Not Post to External Chats or Comments](#16-do-not-post-to-external-chats-or-comments) for when content may be posted.
+Use this style for daily reports, brief merge and pull request (MR/PR) descriptions, and short messages in work correspondence. For tracker tickets, follow [Issue Tracker Ticket Creation](#9-issue-tracker-ticket-creation). Preserve any required sections. Follow [Do Not Post to External Chats or Comments](#16-do-not-post-to-external-chats-or-comments) for when content may be posted.
 
 When reporting work results, write in the first person. Use a short numbered list without headings and give one result per item. Start each item with an action verb such as "Reduced", "Fixed", or "Checked".
 
@@ -332,6 +332,8 @@ For a standalone daily report, keep `Daily YYYY.MM.DD` as the title and include 
 Create tracker tickets only when the user asks to create a ticket or to transfer work to the tracker. When you identify follow-up work without such a request, propose a ticket in the current conversation and do not create it.
 
 Before creating a ticket, check whether an existing ticket already covers the work. If one exists, reference it instead of creating a duplicate, and edit it only when the user explicitly requests it. Otherwise create a new ticket and assign it to the current user by default. If the tracker supports an explicit assignee, set the current user as the assignee rather than leaving the ticket unassigned.
+
+Keep the ticket as concise as a [short-form work communication](#8-short-form-work-communication), but do not write in the first person. Use a short list to state what needs to be done, with one action per item. Start each action item with a verb such as "Add", "Fix", or "Verify". Keep acceptance criteria focused on observable outcomes.
 
 Structure the ticket description with these sections, in this order:
 
