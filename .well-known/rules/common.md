@@ -9,7 +9,7 @@
 5. [Standalone Specification Structure](#5-standalone-specification-structure)
 6. [Narrative Style](#6-narrative-style)
 7. [Use Outline When Available](#7-use-outline-when-available)
-8. [Short Work Updates](#8-short-work-updates)
+8. [Short-Form Work Communication](#8-short-form-work-communication)
 9. [Issue Tracker Ticket Creation](#9-issue-tracker-ticket-creation)
 10. [Do Not Make Unrequested Changes](#10-do-not-make-unrequested-changes)
 11. [Do Not Run Heavy Operations](#11-do-not-run-heavy-operations)
@@ -311,11 +311,11 @@ Before making any change to an existing Outline document, always read its curren
 
 Outline documents may link to related Outline documents and to external sources, such as tracker tickets, merge requests, and external documentation. Do not add links to Outline documents from outside Outline, including tracker tickets, merge requests, issue and merge request comments, commit messages, code, repository documentation, and chats. When useful context exists only in Outline, summarize it in the external artifact instead of linking to Outline.
 
-## 8. Short Work Updates
+## 8. Short-Form Work Communication
 
-Use this format for short work updates in daily reports, merge and pull request (MR/PR) descriptions, work correspondence, and tracker tickets. Apply it to the update itself without removing required sections from the surrounding artifact. Follow [Issue Tracker Ticket Creation](#9-issue-tracker-ticket-creation) for ticket structure and [Do Not Post to External Chats or Comments](#16-do-not-post-to-external-chats-or-comments) for when an update may be posted.
+Use this style for daily reports, brief merge and pull request (MR/PR) descriptions, and short messages in work correspondence. For tracker tickets, follow [Issue Tracker Ticket Creation](#9-issue-tracker-ticket-creation). Preserve any required sections. Follow [Do Not Post to External Chats or Comments](#16-do-not-post-to-external-chats-or-comments) for when content may be posted.
 
-Write in the first person. Use a short numbered list without headings and give one result per item. Start each item with an action verb such as "Reduced", "Fixed", or "Checked".
+When reporting work results, write in the first person. Use a short numbered list without headings and give one result per item. Start each item with an action verb such as "Reduced", "Fixed", or "Checked".
 
 Include only details that explain the result, such as its scale, an important limitation, or a difference between clusters. Use approximate figures when they are enough to convey the result, such as "about 3 times", and keep exact figures when the reader needs them to make a decision or reproduce the result.
 
@@ -332,6 +332,8 @@ For a standalone daily report, keep `Daily YYYY.MM.DD` as the title and include 
 Create tracker tickets only when the user asks to create a ticket or to transfer work to the tracker. When you identify follow-up work without such a request, propose a ticket in the current conversation and do not create it.
 
 Before creating a ticket, check whether an existing ticket already covers the work. If one exists, reference it instead of creating a duplicate, and edit it only when the user explicitly requests it. Otherwise create a new ticket and assign it to the current user by default. If the tracker supports an explicit assignee, set the current user as the assignee rather than leaving the ticket unassigned.
+
+Keep the ticket as concise as a [short-form work communication](#8-short-form-work-communication), but do not write in the first person. Use a short list to state what needs to be done, with one action per item. Start each action item with a verb such as "Add", "Fix", or "Verify". Keep acceptance criteria focused on observable outcomes.
 
 Structure the ticket description with these sections, in this order:
 
