@@ -9,7 +9,7 @@
 5. [Standalone Specification Structure](#5-standalone-specification-structure)
 6. [Narrative Style](#6-narrative-style)
 7. [Use Outline When Available](#7-use-outline-when-available)
-8. [Daily Description Format](#8-daily-description-format)
+8. [Short Work Updates](#8-short-work-updates)
 9. [Issue Tracker Ticket Creation](#9-issue-tracker-ticket-creation)
 10. [Do Not Make Unrequested Changes](#10-do-not-make-unrequested-changes)
 11. [Do Not Run Heavy Operations](#11-do-not-run-heavy-operations)
@@ -32,7 +32,7 @@ Write in English by default. When existing artifacts of the same kind already us
 
 Keep one primary language within a document and across closely related artifacts, such as the proposal, specs, and design of one OpenSpec change, unless multilingual content is requested.
 
-Prefer established terms of the selected language; retain foreign terms when they are more precise, have no established equivalent, or are part of an exact interface. When both forms help, introduce them together once and use the preferred term consistently. Do not translate exact technical identifiers, including product and tool names, commands and options, paths and filenames, variables and configuration values, API fields, enums, and events, code, package, image, and repository names, external labels, and verbatim output. Keep headings in the selected language unless they are exact identifiers or a format prescribes fixed headings, such as the daily update format or headings required by the OpenSpec schema. Translate user-facing taxonomy when an established translation exists, but preserve machine-facing paths and keys. Preserve meaning when translating and do not add requirements or claims. Before finalizing, check language consistency, terminology, headings, and identifier fidelity.
+Prefer established terms of the selected language; retain foreign terms when they are more precise, have no established equivalent, or are part of an exact interface. When both forms help, introduce them together once and use the preferred term consistently. Do not translate exact technical identifiers, including product and tool names, commands and options, paths and filenames, variables and configuration values, API fields, enums, and events, code, package, image, and repository names, external labels, and verbatim output. Keep headings in the selected language unless they are exact identifiers or a format prescribes fixed headings, such as those required by the OpenSpec schema. Translate user-facing taxonomy when an established translation exists, but preserve machine-facing paths and keys. Preserve meaning when translating and do not add requirements or claims. Before finalizing, check language consistency, terminology, headings, and identifier fidelity.
 
 ## 3. OpenSpec Documentation Sync
 
@@ -311,40 +311,21 @@ Before making any change to an existing Outline document, always read its curren
 
 Outline documents may link to related Outline documents and to external sources, such as tracker tickets, merge requests, and external documentation. Do not add links to Outline documents from outside Outline, including tracker tickets, merge requests, issue and merge request comments, commit messages, code, repository documentation, and chats. When useful context exists only in Outline, summarize it in the external artifact instead of linking to Outline.
 
-## 8. Daily Description Format
+## 8. Short Work Updates
 
-When writing a daily work update, choose the language according to [Language](#2-language), based on neighboring daily updates of the same kind. This format is independent of the storage tool; use it whether the update is written in Outline, another system, or a local document.
+Use this format for short work updates in daily reports, merge and pull request (MR/PR) descriptions, work correspondence, and tracker tickets. Apply it to the update itself without removing required sections from the surrounding artifact. Follow [Issue Tracker Ticket Creation](#9-issue-tracker-ticket-creation) for ticket structure and [Do Not Post to External Chats or Comments](#16-do-not-post-to-external-chats-or-comments) for when an update may be posted.
 
-Use the following structure and keep its headings in English:
+Write in the first person. Use a short numbered list without headings and give one result per item. Start each item with an action verb such as "Reduced", "Fixed", or "Checked".
 
-```markdown
-# Daily YYYY.MM.DD
+Include only details that explain the result, such as its scale, an important limitation, or a difference between clusters. Use approximate figures when they are enough to convey the result, such as "about 3 times", and keep exact figures when the reader needs them to make a decision or reproduce the result.
 
-## Done
+Do not list tests, commits, branches, or work you did not do unless asked. If a check failed or a material risk remains, say so directly.
 
-- Completed work, with concrete outcome and relevant technical detail.
-- Findings or blockers, including their impact where known.
-- Links to relevant changes, issues, merge requests, test evidence, or source material.
+For a standalone daily report, keep `Daily YYYY.MM.DD` as the title and include these sections in order, with their headings in English:
 
-## Notes
-
-- Useful information discovered during the workday, including technical findings, decisions, caveats, or context that may be useful later.
-
-## Plan
-
-- [ ] Planned task with a clear, actionable outcome.
-- [x] Completed task, when tracking completion in the same update.
-
-## Tags
-
-relevant-topic, another-topic
-```
-
-Use the daily update date in the title only; do not include dates in section headings. `Done` covers the previous working day, skipping weekends and non-working days. `Plan` covers the daily update date. State this date mapping in the rule text, not as annotations in the structure example. Use `Notes` for useful information discovered during the workday, such as technical findings, decisions, caveats, or context that may be useful later. Report material work and outcomes concisely, distinguishing completed work from investigation and planned work. Use checklist boxes for plans when tracking status; link supporting artifacts inline or immediately below the relevant item.
-
-Always include every section, including `Tags`. When a section has no content, put a single `-` in it instead of omitting it or adding filler.
-
-When a plan item is transferred to the tracker, the item may be checked only after a tracker ticket has been created for the remaining work and linked from the plan item. Checking the item records that the work was transferred to the tracker, not that the long-term work itself is complete.
+1. `Notes`: Use the short numbered list for results from the previous working day, skipping weekends and other non-working days. Include relevant findings and blockers in the same list. Do not add a separate `Done` section.
+2. `Tasks`: List only tasks assigned to the report author by the lead during that daily meeting. The author can fill this section in manually. When drafting from a meeting transcript, include only assignments explicitly recorded there. If no such tasks are known, leave the section blank for the author to fill in if needed. Preserve any tasks already entered manually.
+3. `Tags`: List relevant topics as comma-separated tags.
 
 ## 9. Issue Tracker Ticket Creation
 
